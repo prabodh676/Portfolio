@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prabodh Umesh Gadre — Full-Stack, Real-Time Systems & Applied ML Portfolio</title>
+
+  <!-- Tailwind CSS CDN for rapid responsive layout utilities -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Outfit & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS & CUSTOM THEME VARIABLES
+       ========================================================================= */
+    :root {
+      --bg-canvas: #0A0908;
+      --bg-surface: #12100E;
+      --bg-elevated: #181512;
+      --accent-pink: #FF3E74;
+      --text-headline: #FAFAFA;
+      --text-body: #CEDEFB;
+      --btn-primary-bg: #CF0F1E;
+      --btn-primary-hover: #E51526;
+      --text-white: #FFFFFF;
+      --border-subtle: rgba(250, 250, 250, 0.1);
+      --border-accent: rgba(255, 62, 116, 0.36);
+      --font-outfit: 'Outfit', sans-serif;
+      --font-poppins: 'Poppins', sans-serif;
+      --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-headline);
+      font-family: var(--font-outfit);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .font-outfit {
+      font-family: var(--font-outfit);
+    }
+
+    .font-poppins {
+      font-family: var(--font-poppins);
+    }
+
+    /* =========================================================================
+       SECTION TRANSITION WIPE OVERLAY
+       ========================================================================= */
+    .section-wipe-curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      background: linear-gradient(105deg, #0A0908 0%, #170B10 48%, #0A0908 100%);
+      border-top: 2px solid rgba(255, 62, 116, 0.55);
+      transform: translateX(-105%);
+      opacity: 0;
+    }
+
+    @keyframes wipeSweep {
+      0% {
+        opacity: 0.92;
+        transform: translateX(-102%);
+      }
+      45% {
+        opacity: 0.96;
+        transform: translateX(0%);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(104%);
+      }
+    }
+
+    .section-wipe-curtain.is-wiping {
+      animation: wipeSweep 0.58s var(--ease-spring) forwards;
+    }
+
+    /* =========================================================================
+       SCROLL PROGRESS BAR
+       ========================================================================= */
+    .scroll-progress-track {
+      position: fixed;
+      top: 63px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      z-index: 45;
+      background: rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .scroll-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #CF0F1E 0%, #FF3E74 65%, #CEDEFB 100%);
+      box-shadow: 0 0 12px rgba(255, 62, 116, 0.65);
+      transition: width 0.08s linear;
+    }
+
+    /* =========================================================================
+       KEYFRAME ANIMATIONS
+       ========================================================================= */
+    @keyframes heroFadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes stageFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes starPulse {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 0 rgba(255, 62, 116, 0));
+      }
+      50% {
+        transform: scale(1.12) rotate(12deg);
+        filter: drop-shadow(0 0 8px rgba(255, 62, 116, 0.55));
+      }
+    }
+
+    @keyframes gridDrift {
+      0% {
+        background-position: 0px 0px;
+      }
+      100% {
+        background-position: 64px 64px;
+      }
+    }
+
+    @keyframes statusBeacon {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 62, 116, 0.65);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(255, 62, 116, 0);
+      }
+    }
+
+    @keyframes contentSwap {
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-stagger {
+      opacity: 0;
+      animation: heroFadeUp 0.72s var(--ease-spring) forwards;
+    }
+
+    .hero-stagger-1 { animation-delay: 0.06s; }
+    .hero-stagger-2 { animation-delay: 0.16s; }
+    .hero-stagger-3 { animation-delay: 0.26s; }
+    .hero-stagger-4 { animation-delay: 0.36s; }
+
+    .hero-stage-enter {
+      opacity: 0;
+      animation: stageFadeIn 0.85s var(--ease-spring) 0.2s forwards;
+    }
+
+    .star-pulse {
+      animation: starPulse 3.6s ease-in-out infinite;
+    }
+
+    .status-beacon {
+      animation: statusBeacon 2.2s ease-out infinite;
+    }
+
+    .content-swap {
+      animation: contentSwap 0.34s var(--ease-spring) both;
+    }
+
+    /* Scroll reveal animations */
+    .reveal-ready {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.65s var(--ease-spring),
+        transform 0.65s var(--ease-spring);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .reveal-ready.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================================================
+       HERO SECTION ARCHITECTURE
+       ========================================================================= */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      min-height: 847px;
+      background: var(--bg-canvas);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      position: relative;
+      width: 100%;
+      max-width: 1440px;
+      min-height: 847px;
+      margin: 0 auto;
+      padding: 104px 48px 64px 80px;
+      display: grid;
+      grid-template-columns: minmax(0, 525px) minmax(0, 1fr);
+      align-items: center;
+      gap: 48px;
+    }
+
+    .hero-left-stack {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 525px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 36px;
+    }
+
+    .hero-copy-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .hero-title-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      min-height: 29px;
+      font-family: var(--font-outfit);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 29px;
+      color: var(--accent-pink);
+    }
+
+    .hero-headline {
+      width: 100%;
+      font-family: var(--font-outfit);
+      font-weight: 600;
+      font-size: 62px;
+      line-height: 78px;
+      letter-spacing: -0.02em;
+      color: var(--text-headline);
+      margin: 0;
+    }
+
+    .hero-subcopy {
+      width: 100%;
+      font-family: var(--font-outfit);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 29px;
+      color: var(--text-body);
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-crimson {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 14px 32px;
+      gap: 6px;
+      min-height: 44px;
+      background: var(--btn-primary-bg);
+      color: var(--text-white);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      font-family: var(--font-poppins);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.3;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.22s var(--ease-spring), transform 0.2s var(--ease-spring), box-shadow 0.25s var(--ease-spring);
+    }
+
+    .btn-crimson::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.16) 50%, transparent 80%);
+      transform: translateX(-110%);
+      transition: transform 0.55s var(--ease-spring);
+      pointer-events: none;
+    }
+
+    .btn-crimson:hover::after {
+      transform: translateX(110%);
+    }
+
+    .btn-crimson:hover {
+      background: var(--btn-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(207, 15, 30, 0.38);
+    }
+
+    .btn-crimson:active {
+      transform: translateY(0);
+    }
+
+    .btn-ghost-hero {
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 14px 32px;
+      gap: 6px;
+      min-height: 44px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-white);
+      border: 1px solid rgba(250, 250, 250, 0.2);
+      border-radius: 4px;
+      font-family: var(--font-poppins);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.3;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.22s var(--ease-spring), background-color 0.22s var(--ease-spring), transform 0.2s var(--ease-spring);
+    }
+
+    .btn-ghost-hero:hover {
+      border-color: rgba(255, 62, 116, 0.65);
+      background: rgba(255, 62, 116, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost-hero:active {
+      transform: translateY(0);
+    }
+
+    .arrow-rot-90 {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(90deg);
+      flex: none;
+      transition: transform 0.22s var(--ease-spring);
+    }
+
+    a:hover .arrow-rot-90,
+    button:hover .arrow-rot-90 {
+      transform: rotate(90deg) translateY(-3px);
+    }
+
+    .hero-spotlight-stage {
+      position: relative;
+      width: 100%;
+      min-height: 540px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 28% 25%, rgba(255, 62, 116, 0.16), transparent 46%),
+        radial-gradient(circle at 76% 68%, rgba(206, 222, 251, 0.11), transparent 52%),
+        radial-gradient(circle at 65% 20%, rgba(207, 15, 30, 0.16), transparent 45%),
+        linear-gradient(150deg, #151210 0%, #0D0B0A 55%, #080706 100%);
+      border: 1px solid rgba(250, 250, 250, 0.08);
+      box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.72),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(250, 250, 250, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(250, 250, 250, 0.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse at 50% 50%, black 35%, transparent 82%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 35%, transparent 82%);
+      animation: gridDrift 18s linear infinite;
+      pointer-events: none;
+    }
+
+    .hero-pointer-glow {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 9999px;
+      top: -80px;
+      right: -60px;
+      background: radial-gradient(
+        circle,
+        rgba(255, 62, 116, 0.16) 0%,
+        rgba(206, 222, 251, 0.07) 45%,
+        transparent 72%
+      );
+      filter: blur(24px);
+      transition: transform 0.24s ease-out;
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       3D TILT + SHINE STUDIO CARDS
+       ========================================================================= */
+    .studio-card {
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      --shine-x: 50%;
+      --shine-y: 50%;
+      --shine-opacity: 0;
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.032) 0%, rgba(18, 16, 14, 0.94) 100%);
+      border: 1px solid rgba(250, 250, 250, 0.09);
+      border-radius: 16px;
+      overflow: hidden;
+      transition:
+        border-color 0.25s var(--ease-spring),
+        transform 0.18s var(--ease-spring),
+        box-shadow 0.28s var(--ease-spring);
+    }
+
+    .studio-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: var(--shine-opacity);
+      transition: opacity 0.25s ease;
+      background: radial-gradient(
+        420px circle at var(--shine-x) var(--shine-y),
+        rgba(255, 62, 116, 0.16),
+        rgba(206, 222, 251, 0.07) 38%,
+        transparent 72%
+      );
+      z-index: 1;
+    }
+
+    .studio-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .studio-card.is-tilting {
+      transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-4px);
+      border-color: rgba(255, 62, 116, 0.45);
+      box-shadow:
+        0 22px 50px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 62, 116, 0.14);
+    }
+
+    .studio-card:hover {
+      border-color: rgba(255, 62, 116, 0.42);
+      box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 62, 116, 0.12);
+    }
+
+    .skill-pill {
+      transition: transform 0.18s var(--ease-spring), background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .skill-pill:hover {
+      transform: translateY(-2px);
+      background-color: rgba(255, 62, 116, 0.14);
+      color: #FFFFFF;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0A0908;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #26221F;
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF3E74;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-stagger,
+      .hero-stage-enter,
+      .star-pulse,
+      .hero-grid-overlay,
+      .status-beacon,
+      .content-swap,
+      .section-wipe-curtain.is-wiping {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .section-wipe-curtain {
+        display: none !important;
+      }
+
+      .reveal-ready {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      .scroll-progress-bar {
+        transition: none !important;
+      }
+
+      .studio-card::before {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 96px 32px 56px;
+        gap: 36px;
+      }
+
+      .hero-left-stack {
+        max-width: 640px;
+      }
+
+      .hero-spotlight-stage {
+        min-height: 440px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .hero-section {
+        min-height: auto;
+      }
+
+      .hero-inner {
+        min-height: auto;
+        padding: 84px 20px 44px;
+        gap: 28px;
+      }
+
+      .hero-left-stack {
+        gap: 24px;
+      }
+
+      .hero-copy-group {
+        gap: 14px;
+      }
+
+      .hero-headline {
+        font-size: 38px;
+        line-height: 46px;
+      }
+
+      .hero-subcopy {
+        font-size: 14px;
+        line-height: 24px;
+      }
+
+      .hero-actions {
+        width: 100%;
+        gap: 12px;
+      }
+
+      .btn-crimson,
+      .btn-ghost-hero {
+        flex: 1 1 140px;
+        padding: 13px 18px;
+      }
+
+      .hero-spotlight-stage {
+        min-height: auto;
+        padding: 20px;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-[#0A0908] text-[#FAFAFA] selection:bg-[#FF3E74]/30 selection:text-[#FAFAFA]">
+  <!-- Section Transition Wipe Curtain -->
+  <div id="sectionWipeCurtain" class="section-wipe-curtain" aria-hidden="true"></div>
+
+  <!-- =======================================================================
+       TOP NAVIGATION BAR + SCROLL PROGRESS INDICATOR
+       ======================================================================= -->
+  <header class="fixed top-0 inset-x-0 z-40 border-b border-white/[0.07] bg-[#0A0908]/85 backdrop-blur-md">
+    <div class="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-[80px]">
+      <a href="#top" class="wipe-link flex items-center gap-2.5 text-[#FAFAFA] no-underline group">
+        <span class="inline-flex h-7 w-7 items-center justify-center rounded bg-[#CF0F1E] font-poppins text-xs font-semibold text-white transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#E51526]">
+          PG
+        </span>
+        <span class="font-outfit text-base sm:text-lg font-semibold tracking-tight text-[#FAFAFA]">
+          Prabodh Gadre
+        </span>
+        <span class="hidden md:inline-flex items-center gap-1 rounded-full border border-[#FF3E74]/35 bg-[#FF3E74]/10 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#FF3E74]">
+          BCA · 9.16 CGPA
+        </span>
+      </a>
+
+      <nav aria-label="Primary Navigation" class="hidden lg:flex items-center gap-7 font-poppins text-xs font-medium text-[#CEDEFB]">
+        <a href="#projects" class="wipe-link hover:text-[#FAFAFA] transition-colors">Projects</a>
+        <a href="#sandboxes" class="wipe-link hover:text-[#FAFAFA] transition-colors">Live Sandboxes</a>
+        <a href="#research" class="wipe-link hover:text-[#FAFAFA] transition-colors">Research</a>
+        <a href="#skills" class="wipe-link hover:text-[#FAFAFA] transition-colors">Skills &amp; Education</a>
+        <a href="#contact" class="wipe-link hover:text-[#FAFAFA] transition-colors">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <button
+          type="button"
+          id="navCopyEmailBtn"
+          class="hidden sm:inline-flex items-center gap-1.5 rounded border border-white/15 bg-white/[0.03] px-3 py-1.5 font-poppins text-xs font-medium text-[#CEDEFB] hover:border-[#FF3E74]/50 hover:text-[#FAFAFA] transition cursor-pointer"
+        >
+          <span>prabodhgadre06@gmail.com</span>
+        </button>
+        <a
+          href="#contact"
+          class="wipe-link inline-flex items-center gap-1.5 rounded bg-[#CF0F1E] px-3.5 py-1.5 font-poppins text-xs font-medium text-white hover:bg-[#E51526] transition no-underline"
+        >
+          <span>Hire / Connect</span>
+          <span class="arrow-rot-90" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path d="M8 13.3333V2.66667M8 2.66667L3.33333 7.33333M8 2.66667L12.6667 7.33333" stroke="#FFFFFF" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-progress-track" aria-hidden="true">
+      <div id="scrollProgressBar" class="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- =====================================================================
+         HERO SECTION
+         ===================================================================== -->
+    <section class="hero-section" aria-label="Portfolio Hero">
+      <div class="hero-inner">
+        <div class="hero-left-stack">
+          <div class="hero-copy-group">
+            <div class="hero-title-group">
+              <div class="hero-eyebrow hero-stagger hero-stagger-1">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-[#FF3E74] star-pulse" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                      d="M10 1.875L12.3925 6.7225L17.7425 7.5L13.8712 11.2725L14.785 16.6L10 14.0825L5.215 16.6L6.12875 11.2725L2.2575 7.5L7.6075 6.7225L10 1.875Z"
+                      fill="#FF3E74"
+                    />
+                  </svg>
+                </span>
+                <span>AI HACK × MRDU 2K26 · Round 2 Selector</span>
+              </div>
+
+              <h1 class="hero-headline hero-stagger hero-stagger-2">
+                Prabodh Gadre — Systems &amp; Applied AI
+              </h1>
+            </div>
+
+            <p class="hero-subcopy hero-stagger hero-stagger-3">
+              BCA undergraduate (9.16 CGPA) building full-stack web apps, real-time MQTT/WebSocket telemetry pipelines, and computer vision systems—from UrbanSpot to Metro Load Analytics and 96.44%-accurate MobileNetV2 classifiers.
+            </p>
+          </div>
+
+          <div class="hero-actions hero-stagger hero-stagger-4">
+            <a href="#projects" class="wipe-link btn-crimson">
+              <span>Explore Builds</span>
+              <span class="arrow-rot-90" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M8 13.3333V2.66667M8 2.66667L3.33333 7.33333M8 2.66667L12.6667 7.33333"
+                    stroke="#FFFFFF"
+                    stroke-width="1.25"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+
+            <a href="#sandboxes" class="wipe-link btn-ghost-hero">
+              <span>Live Sandboxes</span>
+              <span class="arrow-rot-90" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 16.6667V3.33334M10 3.33334L4.16667 9.16667M10 3.33334L15.8333 9.16667"
+                    stroke="#FFFFFF"
+                    stroke-width="1.25"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-spotlight-stage hero-stage-enter" id="heroSpotlightStage">
+          <div class="hero-grid-overlay"></div>
+          <div class="hero-pointer-glow" id="heroPointerGlow"></div>
+
+          <div class="relative z-10 flex flex-wrap items-center justify-between gap-3">
+            <div class="inline-flex items-center gap-2 rounded-full border border-[#FF3E74]/35 bg-[#0A0908]/75 px-3 py-1 font-poppins text-[11px] font-medium text-[#CEDEFB]">
+              <span class="h-2 w-2 rounded-full bg-[#FF3E74] status-beacon"></span>
+              <span>Spotlight Architecture</span>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5" role="tablist" aria-label="Featured Spotlight Systems">
+              <button
+                type="button"
+                data-spotlight-tab="urbanspot"
+                class="spotlight-tab rounded px-2.5 py-1 font-poppins text-[11px] font-medium bg-[#CF0F1E] text-white cursor-pointer transition"
+              >
+                UrbanSpot
+              </button>
+              <button
+                type="button"
+                data-spotlight-tab="metro"
+                class="spotlight-tab rounded px-2.5 py-1 font-poppins text-[11px] font-medium bg-white/[0.05] text-[#CEDEFB] hover:text-white cursor-pointer transition"
+              >
+                Metro Load
+              </button>
+              <button
+                type="button"
+                data-spotlight-tab="vision"
+                class="spotlight-tab rounded px-2.5 py-1 font-poppins text-[11px] font-medium bg-white/[0.05] text-[#CEDEFB] hover:text-white cursor-pointer transition"
+              >
+                Freshness CV
+              </button>
+            </div>
+          </div>
+
+          <div class="relative z-10 my-6 space-y-4" id="spotlightContent">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p id="spotlightTag" class="font-poppins text-xs font-medium text-[#FF3E74]">
+                  ROUND 2 SELECTION · AI HACK × MRDU 2K26 (TEAM 3VN)
+                </p>
+                <h2 id="spotlightTitle" class="mt-1 font-outfit text-2xl sm:text-3xl font-semibold text-[#FAFAFA]">
+                  UrbanSpot — Smart Parking &amp; Discovery
+                </h2>
+              </div>
+              <span id="spotlightBadge" class="shrink-0 rounded border border-white/15 bg-[#0A0908]/80 px-2.5 py-1 font-poppins text-[11px] font-medium text-[#CEDEFB]">
+                10-Min Atomic Hold
+              </span>
+            </div>
+
+            <p id="spotlightDesc" class="font-outfit text-sm sm:text-[15px] leading-relaxed text-[#CEDEFB]">
+              Full-stack parking reservation web app with live WebSocket occupancy streaming, idempotent bookings, offline PIN/QR passes with Dexie outbox queuing, MapLibre routing, and a 4-tool AI assistant.
+            </p>
+
+            <div id="spotlightStack" class="flex flex-wrap gap-1.5 pt-1">
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">React + Vite</span>
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">FastAPI</span>
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">WebSockets</span>
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">MapLibre GL</span>
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">SQLite &amp; Supabase</span>
+              <span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">Dexie Offline</span>
+            </div>
+          </div>
+
+          <div class="relative z-10 grid grid-cols-3 gap-3 border-t border-white/[0.08] pt-4">
+            <div>
+              <div id="metric1Label" class="font-poppins text-[11px] text-[#CEDEFB]/70">Reservation Hold</div>
+              <div id="metric1Value" class="mt-0.5 font-outfit text-base sm:text-lg font-semibold text-[#FAFAFA]">10-Min + Idempotent</div>
+            </div>
+            <div>
+              <div id="metric2Label" class="font-poppins text-[11px] text-[#CEDEFB]/70">AI Assistant Tools</div>
+              <div id="metric2Value" class="mt-0.5 font-outfit text-base sm:text-lg font-semibold text-[#FF3E74]">4 Callable Tools</div>
+            </div>
+            <div>
+              <div id="metric3Label" class="font-poppins text-[11px] text-[#CEDEFB]/70">Low-Signal Mode</div>
+              <div id="metric3Value" class="mt-0.5 font-outfit text-base sm:text-lg font-semibold text-[#FAFAFA]">Dexie + PIN/QR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         PROJECTS SECTION
+         ===================================================================== -->
+    <section id="projects" class="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-[80px]">
+      <div class="reveal-ready flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/[0.08] pb-8">
+        <div class="max-w-2xl space-y-2">
+          <div class="inline-flex items-center gap-2 font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+            <span>Selected Engineering Builds</span>
+          </div>
+          <h2 class="font-outfit text-3xl sm:text-4xl font-semibold tracking-tight text-[#FAFAFA]">
+            Production-Minded Systems &amp; Applied AI
+          </h2>
+          <p class="font-outfit text-sm sm:text-base text-[#CEDEFB]">
+            Filter by engineering domain or inspect architecture notes, data flows, and trade-offs behind each project.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter projects by category">
+          <button
+            type="button"
+            data-filter="all"
+            class="project-filter-btn rounded bg-[#CF0F1E] px-3.5 py-2 font-poppins text-xs font-medium text-white cursor-pointer transition"
+          >
+            All Builds (3)
+          </button>
+          <button
+            type="button"
+            data-filter="realtime"
+            class="project-filter-btn rounded border border-white/15 bg-white/[0.03] px-3.5 py-2 font-poppins text-xs font-medium text-[#CEDEFB] hover:border-[#FF3E74]/50 hover:text-white cursor-pointer transition"
+          >
+            Full-Stack &amp; Telemetry
+          </button>
+          <button
+            type="button"
+            data-filter="ml"
+            class="project-filter-btn rounded border border-white/15 bg-white/[0.03] px-3.5 py-2 font-poppins text-xs font-medium text-[#CEDEFB] hover:border-[#FF3E74]/50 hover:text-white cursor-pointer transition"
+          >
+            Computer Vision &amp; AI
+          </button>
+        </div>
+      </div>
+
+      <div id="projectsGrid" class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Project 1: UrbanSpot -->
+        <article class="studio-card reveal-ready flex flex-col justify-between p-6" style="--reveal-delay: 0ms;" data-category="realtime ml">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded bg-[#FF3E74]/15 border border-[#FF3E74]/35 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#FF3E74]">
+                AI HACK × MRDU 2K26 · Round 2
+              </span>
+              <span class="font-poppins text-[11px] text-[#CEDEFB]/70">Team 3VN</span>
+            </div>
+
+            <h3 class="mt-4 font-outfit text-xl font-semibold text-[#FAFAFA]">
+              UrbanSpot — Real-Time Smart Parking &amp; Discovery Platform
+            </h3>
+            <p class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]">
+              Full-stack parking discovery and reservation web application with live slot availability, pricing/amenity filters, turn-by-turn routing, and a 10-minute atomic slot hold flow.
+            </p>
+
+            <ul class="mt-4 space-y-2 border-t border-white/[0.07] pt-4 font-outfit text-xs sm:text-sm text-[#CEDEFB]/90">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>Real-time occupancy streaming over WebSockets, idempotent reservation handling, and offline PIN/QR passes with Dexie outbox queuing.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>Occupancy forecasting and tool-calling AI assistant (<code class="text-[#FAFAFA]">search_lots</code>, <code class="text-[#FAFAFA]">get_eta</code>, <code class="text-[#FAFAFA]">check_forecast</code>, <code class="text-[#FAFAFA]">reserve_slot</code>) + crowdsourced spot reporting.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/[0.07]">
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">React</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Vite</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Tailwind</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">MapLibre GL</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">FastAPI</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">WebSockets</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">SQLite &amp; Supabase</span>
+            </div>
+
+            <button
+              type="button"
+              data-inspect="urbanspot"
+              class="inspect-btn w-full inline-flex items-center justify-center gap-2 rounded border border-white/15 bg-white/[0.04] px-4 py-2.5 font-poppins text-xs font-medium text-[#FAFAFA] hover:border-[#FF3E74] hover:bg-[#FF3E74]/10 cursor-pointer transition"
+            >
+              <span>Inspect Architecture &amp; Reliability Notes</span>
+              <span class="arrow-rot-90" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 13.3333V2.66667M8 2.66667L3.33333 7.33333M8 2.66667L12.6667 7.33333" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Project 2: Metro Traffic & Passenger Load Analytics -->
+        <article class="studio-card reveal-ready flex flex-col justify-between p-6" style="--reveal-delay: 110ms;" data-category="realtime">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded bg-white/[0.07] border border-white/15 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#CEDEFB]">
+                Event-Driven Telemetry
+              </span>
+              <span class="font-poppins text-[11px] text-[#FF3E74]">MQTT → MongoDB → UI</span>
+            </div>
+
+            <h3 class="mt-4 font-outfit text-xl font-semibold text-[#FAFAFA]">
+              Metro Traffic &amp; Passenger Load Analytics Platform
+            </h3>
+            <p class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]">
+              Event-driven transit telemetry pipeline subscribing to train and carriage topics via MQTT, persisting structured load records in MongoDB, and driving an operator dashboard.
+            </p>
+
+            <ul class="mt-4 space-y-2 border-t border-white/[0.07] pt-4 font-outfit text-xs sm:text-sm text-[#CEDEFB]/90">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>Subscribes to <code class="text-[#FAFAFA]">metro/train/+/telemetry</code> over MQTT, validates &amp; stores load logs via Mongoose, and serves <code class="text-[#FAFAFA]">GET /api/telemetry/recent</code>.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>React + Tailwind operator interface with KPI metric cards, multi-coach occupancy heatmaps, and planned Socket.io / CV / Docker extensions.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/[0.07]">
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Node.js</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Express</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">MongoDB</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">MQTT</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">React</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Tailwind CSS</span>
+            </div>
+
+            <button
+              type="button"
+              data-inspect="metro"
+              class="inspect-btn w-full inline-flex items-center justify-center gap-2 rounded border border-white/15 bg-white/[0.04] px-4 py-2.5 font-poppins text-xs font-medium text-[#FAFAFA] hover:border-[#FF3E74] hover:bg-[#FF3E74]/10 cursor-pointer transition"
+            >
+              <span>Inspect Pipeline &amp; Roadmap</span>
+              <span class="arrow-rot-90" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 13.3333V2.66667M8 2.66667L3.33333 7.33333M8 2.66667L12.6667 7.33333" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Project 3: Cloud-Native Computer Vision & Freshness Predictor -->
+        <article class="studio-card reveal-ready flex flex-col justify-between p-6" style="--reveal-delay: 220ms;" data-category="ml">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded bg-[#CF0F1E]/20 border border-[#CF0F1E]/45 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#FAFAFA]">
+                96.44% Accuracy · 13,000+ Images
+              </span>
+              <span class="font-poppins text-[11px] text-[#CEDEFB]/70">14 MB Model</span>
+            </div>
+
+            <h3 class="mt-4 font-outfit text-xl font-semibold text-[#FAFAFA]">
+              Cloud-Native Computer Vision &amp; Freshness Predictor
+            </h3>
+            <p class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]">
+              End-to-end computer vision web application built with MobileNetV2 transfer learning to classify produce freshness and guard against out-of-distribution inputs.
+            </p>
+
+            <ul class="mt-4 space-y-2 border-t border-white/[0.07] pt-4 font-outfit text-xs sm:text-sm text-[#CEDEFB]/90">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>Trained MobileNetV2 transfer learning pipeline achieving <strong class="text-[#FAFAFA]">96.44% accuracy</strong> across <strong class="text-[#FAFAFA]">13,000+ images</strong> with data augmentation to reduce overfitting.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF3E74]"></span>
+                <span>Packaged a <strong class="text-[#FAFAFA]">14 MB</strong> optimized model on Streamlit Cloud with a <strong class="text-[#FAFAFA]">70% Softmax confidence filter</strong> to reject non-target images.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/[0.07]">
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Python</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">PyTorch</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Torchvision</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">MobileNetV2</span>
+              <span class="rounded bg-white/[0.05] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">Streamlit Cloud</span>
+            </div>
+
+            <button
+              type="button"
+              data-inspect="vision"
+              class="inspect-btn w-full inline-flex items-center justify-center gap-2 rounded border border-white/15 bg-white/[0.04] px-4 py-2.5 font-poppins text-xs font-medium text-[#FAFAFA] hover:border-[#FF3E74] hover:bg-[#FF3E74]/10 cursor-pointer transition"
+            >
+              <span>Inspect Model &amp; Confidence Guard</span>
+              <span class="arrow-rot-90" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 13.3333V2.66667M8 2.66667L3.33333 7.33333M8 2.66667L12.6667 7.33333" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Inline Architecture Inspector Panel -->
+      <div id="architectureDrawer" class="mt-8 hidden rounded-2xl border border-[#FF3E74]/40 bg-[#13100E] p-6 sm:p-8 shadow-2xl content-swap">
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-white/[0.08] pb-4">
+          <div>
+            <span id="drawerEyebrow" class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]"></span>
+            <h3 id="drawerTitle" class="mt-1 font-outfit text-2xl font-semibold text-[#FAFAFA]"></h3>
+          </div>
+          <button
+            type="button"
+            id="closeDrawerBtn"
+            class="rounded border border-white/15 bg-white/[0.04] px-3 py-1.5 font-poppins text-xs font-medium text-[#CEDEFB] hover:text-white cursor-pointer transition"
+          >
+            Close Inspector
+          </button>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="rounded-xl border border-white/[0.07] bg-[#0A0908]/70 p-4">
+            <h4 class="font-poppins text-xs font-semibold uppercase tracking-wide text-[#FF3E74]">System Flow</h4>
+            <p id="drawerFlow" class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]"></p>
+          </div>
+          <div class="rounded-xl border border-white/[0.07] bg-[#0A0908]/70 p-4">
+            <h4 class="font-poppins text-xs font-semibold uppercase tracking-wide text-[#FF3E74]">Engineering Trade-off</h4>
+            <p id="drawerTradeoff" class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]"></p>
+          </div>
+          <div class="rounded-xl border border-white/[0.07] bg-[#0A0908]/70 p-4">
+            <h4 class="font-poppins text-xs font-semibold uppercase tracking-wide text-[#FF3E74]">Key Verification Point</h4>
+            <p id="drawerProof" class="mt-2 font-outfit text-sm leading-relaxed text-[#CEDEFB]"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         INTERACTIVE SYSTEM SANDBOXES
+         (UrbanSpot 10-Min Hold + Metro Telemetry + Softmax 70% Gate)
+         ===================================================================== -->
+    <section id="sandboxes" class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 lg:px-[80px]">
+      <div class="reveal-ready max-w-2xl space-y-2 mb-10">
+        <span class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+          Interactive Technical Sandboxes
+        </span>
+        <h2 class="font-outfit text-3xl sm:text-4xl font-semibold tracking-tight text-[#FAFAFA]">
+          Test Holds, Telemetry &amp; Confidence Filtering Live
+        </h2>
+        <p class="font-outfit text-sm sm:text-base text-[#CEDEFB]">
+          Try UrbanSpot’s 10-minute slot hold &amp; offline Dexie outbox queue, stream MQTT carriage telemetry, or inspect the 70% Softmax confidence filter.
+        </p>
+      </div>
+
+      <!-- Sandbox 0: UrbanSpot 10-Minute Slot-Hold & Pass Simulator -->
+      <div class="studio-card reveal-ready p-6 space-y-5 mb-6" style="--reveal-delay: 0ms;">
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b border-white/[0.08] pb-4">
+          <div>
+            <span class="font-poppins text-[11px] font-medium uppercase tracking-wider text-[#FF3E74]">
+              UrbanSpot · Atomic Hold + Idempotency + Dexie Offline Queue
+            </span>
+            <h3 class="mt-1 font-outfit text-xl sm:text-2xl font-semibold text-[#FAFAFA]">
+              10-Minute Parking Slot Hold &amp; PIN/QR Pass Simulator
+            </h3>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="urbanspotLotSelect" class="sr-only">Select Parking Hub</label>
+            <select
+              id="urbanspotLotSelect"
+              class="rounded-lg border border-white/15 bg-[#0A0908] px-3 py-2 font-poppins text-xs text-[#FAFAFA] focus:border-[#FF3E74] focus:outline-none cursor-pointer"
+            >
+              <option value="Banjara Hills Hub · ₹40/hr">Banjara Hills Hub · ₹40/hr</option>
+              <option value="Gachibowli Tech Park · ₹30/hr">Gachibowli Tech Park · ₹30/hr</option>
+              <option value="Secunderabad Central · ₹25/hr">Secunderabad Central · ₹25/hr</option>
+            </select>
+
+            <button
+              type="button"
+              id="toggleOfflineQueueBtn"
+              class="rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 font-poppins text-xs font-medium text-[#CEDEFB] hover:text-white cursor-pointer transition"
+            >
+              Network: Online (Dexie Ready)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <!-- Left 7 Cols: Slot Matrix + Hold Controls -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="flex items-center justify-between font-poppins text-xs text-[#CEDEFB]/80">
+              <span>Select an open bay to lock a 10:00 hold:</span>
+              <span id="spotAvailabilitySummary" class="text-[#FF3E74] font-medium">4 / 6 Bays Open</span>
+            </div>
+
+            <div id="parkingSlotsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+
+            <div class="flex flex-wrap items-center gap-2.5 pt-1">
+              <button
+                type="button"
+                id="lockSlotHoldBtn"
+                class="btn-crimson"
+              >
+                <span>Lock 10-Min Hold</span>
+              </button>
+              <button
+                type="button"
+                id="releaseSlotHoldBtn"
+                class="rounded border border-white/15 bg-white/[0.04] px-4 py-2.5 font-poppins text-xs font-medium text-[#CEDEFB] hover:text-white cursor-pointer transition"
+              >
+                Release Hold
+              </button>
+              <button
+                type="button"
+                id="fastForwardHoldBtn"
+                class="rounded border border-white/15 bg-white/[0.04] px-3.5 py-2.5 font-poppins text-xs font-medium text-[#CEDEFB] hover:border-[#FF3E74]/50 hover:text-white cursor-pointer transition"
+              >
+                Sim -60s
+              </button>
+            </div>
+          </div>
+
+          <!-- Right 5 Cols: Live Hold Countdown & Pass Readout -->
+          <div class="lg:col-span-5 rounded-xl border border-white/[0.08] bg-[#0A0908]/85 p-4 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-poppins text-[11px] uppercase tracking-wider text-[#CEDEFB]/70">Hold Countdown</span>
+                <span id="holdStateBadge" class="rounded bg-white/[0.06] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]">IDLE</span>
+              </div>
+              <div id="holdCountdownDisplay" class="mt-1 font-outfit text-3xl font-semibold text-[#FAFAFA] tabular-nums">
+                10:00
+              </div>
+              <p id="holdHubMeta" class="mt-0.5 font-outfit text-xs text-[#CEDEFB]/80">
+                Banjara Hills Hub · ₹40/hr
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-white/[0.07] bg-[#12100E] p-3 space-y-1.5 font-mono text-xs">
+              <div class="flex justify-between">
+                <span class="text-[#CEDEFB]/65">Selected Bay:</span>
+                <span id="passSlotCode" class="text-[#FAFAFA] font-semibold">A-02</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-[#CEDEFB]/65">Idempotency Key:</span>
+                <span id="passIdemKey" class="text-[#FF3E74] truncate max-w-[165px]">idem_ready_01</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-[#CEDEFB]/65">Offline PIN Pass:</span>
+                <span id="passPinCode" class="text-emerald-300 font-semibold">PENDING HOLD</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-[#CEDEFB]/65">Dexie Outbox:</span>
+                <span id="dexieQueueStatus" class="text-[#CEDEFB]">0 queued ops</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <!-- Sandbox 1: Metro Carriage Telemetry Simulator -->
+        <div class="studio-card reveal-ready p-6 space-y-5" style="--reveal-delay: 0ms;">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="font-poppins text-[11px] font-medium uppercase tracking-wider text-[#FF3E74]">
+                Topic: metro/train/+/telemetry
+              </span>
+              <h3 class="font-outfit text-xl font-semibold text-[#FAFAFA]">
+                Metro Carriage Load &amp; Heatmap Simulator
+              </h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="pulseMetroBtn"
+                class="rounded bg-[#CF0F1E] px-3.5 py-1.5 font-poppins text-xs font-medium text-white hover:bg-[#E51526] active:scale-95 cursor-pointer transition"
+              >
+                Emit Telemetry Tick
+              </button>
+              <button
+                type="button"
+                id="toggleAutoMetroBtn"
+                class="rounded border border-white/15 bg-white/[0.04] px-3 py-1.5 font-poppins text-xs font-medium text-[#CEDEFB] hover:text-white cursor-pointer transition"
+              >
+                Auto Stream: Off
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between font-poppins text-xs text-[#CEDEFB]/80 mb-2">
+              <span>Train ID: <strong id="metroTrainId" class="text-[#FAFAFA]">MR-104</strong></span>
+              <span>Endpoint: <code class="text-[#CEDEFB]">GET /api/telemetry/recent</code></span>
+            </div>
+            <div id="coachHeatmap" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5"></div>
+          </div>
+
+          <div class="rounded-xl border border-white/[0.08] bg-[#0A0908] p-3.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="font-poppins text-[11px] font-medium text-[#CEDEFB]/70">Latest Persisted Payload (MongoDB Schema Preview)</span>
+              <span id="metroAvgLoad" class="font-poppins text-[11px] font-semibold text-[#FF3E74]">Avg Load: 64%</span>
+            </div>
+            <pre id="metroJsonLog" class="overflow-x-auto font-mono text-xs text-[#CEDEFB] leading-relaxed"></pre>
+          </div>
+        </div>
+
+        <!-- Sandbox 2: Softmax Confidence Gate (70% Threshold) -->
+        <div class="studio-card reveal-ready p-6 space-y-5 flex flex-col justify-between" style="--reveal-delay: 120ms;">
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="font-poppins text-[11px] font-medium uppercase tracking-wider text-[#FF3E74]">
+                  MobileNetV2 · 14 MB · 96.44% Acc (13k+ imgs)
+                </span>
+                <h3 class="font-outfit text-xl font-semibold text-[#FAFAFA]">
+                  70% Softmax Out-of-Distribution Guard
+                </h3>
+              </div>
+              <span class="rounded border border-white/15 bg-white/[0.04] px-2.5 py-1 font-poppins text-[11px] text-[#CEDEFB]">
+                Threshold: 70.0%
+              </span>
+            </div>
+
+            <p class="font-outfit text-sm text-[#CEDEFB]">
+              Select a sample inference scenario below to see how the confidence filter accepts high-certainty produce classifications and rejects non-target or ambiguous inputs.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <button
+                type="button"
+                data-sample="fresh-apple"
+                class="sample-infer-btn rounded-lg border border-[#FF3E74]/50 bg-[#FF3E74]/10 p-3 text-left cursor-pointer transition hover:-translate-y-0.5"
+              >
+                <div class="font-poppins text-xs font-semibold text-[#FAFAFA]">Fresh Gala Apple</div>
+                <div class="mt-0.5 font-outfit text-xs text-[#CEDEFB]">Softmax: 97.2%</div>
+              </button>
+
+              <button
+                type="button"
+                data-sample="aged-banana"
+                class="sample-infer-btn rounded-lg border border-white/12 bg-white/[0.03] p-3 text-left hover:border-white/30 hover:-translate-y-0.5 cursor-pointer transition"
+              >
+                <div class="font-poppins text-xs font-semibold text-[#FAFAFA]">Ripe / Aging Banana</div>
+                <div class="mt-0.5 font-outfit text-xs text-[#CEDEFB]">Softmax: 84.6%</div>
+              </button>
+
+              <button
+                type="button"
+                data-sample="random-gadget"
+                class="sample-infer-btn rounded-lg border border-white/12 bg-white/[0.03] p-3 text-left hover:border-white/30 hover:-translate-y-0.5 cursor-pointer transition"
+              >
+                <div class="font-poppins text-xs font-semibold text-[#FAFAFA]">Desk Keyboard Photo</div>
+                <div class="mt-0.5 font-outfit text-xs text-[#CEDEFB]">Softmax: 41.8%</div>
+              </button>
+            </div>
+          </div>
+
+          <div id="inferenceResultBox" class="rounded-xl border border-white/[0.09] bg-[#0A0908] p-4 space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <span id="inferenceDecisionBadge" class="inline-flex items-center rounded bg-emerald-500/15 border border-emerald-400/35 px-2.5 py-0.5 font-poppins text-xs font-semibold text-emerald-300 transition-colors duration-300">
+                ACCEPTED · FRESH PRODUCE
+              </span>
+              <span id="inferenceConfidenceText" class="font-poppins text-xs font-semibold text-[#FAFAFA]">
+                Confidence: 97.2%
+              </span>
+            </div>
+
+            <div class="h-2 w-full rounded-full bg-white/[0.08] overflow-hidden">
+              <div id="inferenceBar" class="h-full rounded-full bg-[#FF3E74] transition-all duration-500 ease-out" style="width: 97.2%;"></div>
+            </div>
+
+            <p id="inferenceExplanation" class="font-outfit text-xs sm:text-sm text-[#CEDEFB]">
+              Top class exceeds the 70% Softmax cutoff; prediction is returned with model metadata.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         RESEARCH SECTION
+         ===================================================================== -->
+    <section id="research" class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 lg:px-[80px]">
+      <div class="reveal-ready max-w-2xl space-y-2 mb-10">
+        <span class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+          Applied Research &amp; Security
+        </span>
+        <h2 class="font-outfit text-3xl sm:text-4xl font-semibold tracking-tight text-[#FAFAFA]">
+          Research Inquiries
+        </h2>
+        <p class="font-outfit text-sm sm:text-base text-[#CEDEFB]">
+          Investigations bridging natural language processing, machine learning classification, and defensive systems.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <article class="studio-card reveal-ready p-6 space-y-3" style="--reveal-delay: 0ms;">
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded bg-[#FF3E74]/15 border border-[#FF3E74]/35 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#FF3E74]">
+              NLP &amp; Phishing Defense
+            </span>
+            <span class="font-poppins text-xs text-[#CEDEFB]/70">Research Track</span>
+          </div>
+          <h3 class="font-outfit text-xl font-semibold text-[#FAFAFA]">
+            Leveraging NLP with Effective Realtime Phishing Prevention
+          </h3>
+          <p class="font-outfit text-sm leading-relaxed text-[#CEDEFB]">
+            Explored NLP models and machine learning techniques to detect and help mitigate QR-based phishing attacks across digital communication channels, focusing on payload inspection and rapid risk scoring.
+          </p>
+        </article>
+
+        <article class="studio-card reveal-ready p-6 space-y-3" style="--reveal-delay: 110ms;">
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded bg-white/[0.06] border border-white/15 px-2.5 py-0.5 font-poppins text-[11px] font-medium text-[#CEDEFB]">
+              Medical ML Classification
+            </span>
+            <span class="font-poppins text-xs text-[#CEDEFB]/70">Research Track</span>
+          </div>
+          <h3 class="font-outfit text-xl font-semibold text-[#FAFAFA]">
+            Detection of Lung Cancer Using Machine Learning
+          </h3>
+          <p class="font-outfit text-sm leading-relaxed text-[#CEDEFB]">
+            Applied machine learning classification approaches to support early-stage lung cancer detection workflows, emphasizing feature evaluation, model validation, and careful metric reporting.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         EDUCATION & TECHNICAL SKILLS SECTION
+         ===================================================================== -->
+    <section id="skills" class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 lg:px-[80px]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-5 space-y-5 reveal-ready" style="--reveal-delay: 0ms;">
+          <div>
+            <span class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+              Academic Foundation
+            </span>
+            <h2 class="mt-1 font-outfit text-3xl font-semibold text-[#FAFAFA]">
+              Education
+            </h2>
+          </div>
+
+          <div class="studio-card p-6 space-y-5">
+            <div class="border-b border-white/[0.08] pb-4">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-poppins text-xs font-semibold text-[#FF3E74]">2024 – 2027</span>
+                <span class="rounded bg-[#CF0F1E]/20 px-2.5 py-0.5 font-poppins text-xs font-semibold text-[#FAFAFA]">
+                  CGPA: 9.16
+                </span>
+              </div>
+              <h3 class="mt-2 font-outfit text-lg font-semibold text-[#FAFAFA]">
+                Bachelor of Computer Applications (BCA)
+              </h3>
+              <p class="mt-0.5 font-outfit text-sm text-[#CEDEFB]">
+                Bhavan’s Vivekananda College, Sainikpuri, Secunderabad
+              </p>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-poppins text-xs font-semibold text-[#CEDEFB]/80">2022 – 2024</span>
+                <span class="rounded bg-white/[0.06] px-2.5 py-0.5 font-poppins text-xs font-medium text-[#CEDEFB]">
+                  CGPA: 8.95
+                </span>
+              </div>
+              <h3 class="mt-2 font-outfit text-lg font-semibold text-[#FAFAFA]">
+                Senior Secondary (Class XII)
+              </h3>
+              <p class="mt-0.5 font-outfit text-sm text-[#CEDEFB]">
+                Deeksha Junior College
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-5 reveal-ready" style="--reveal-delay: 120ms;">
+          <div>
+            <span class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+              Stack &amp; Tooling
+            </span>
+            <h2 class="mt-1 font-outfit text-3xl font-semibold text-[#FAFAFA]">
+              Technical Skills
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="studio-card p-5">
+              <h3 class="font-poppins text-xs font-semibold uppercase tracking-wider text-[#FF3E74]">
+                Languages
+              </h3>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Python</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Java</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">C++</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">JavaScript</span>
+              </div>
+            </div>
+
+            <div class="studio-card p-5">
+              <h3 class="font-poppins text-xs font-semibold uppercase tracking-wider text-[#FF3E74]">
+                Frontend &amp; Web UI
+              </h3>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">React</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Vite</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Tailwind CSS</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Streamlit</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">HTML5 / CSS3</span>
+              </div>
+            </div>
+
+            <div class="studio-card p-5">
+              <h3 class="font-poppins text-xs font-semibold uppercase tracking-wider text-[#FF3E74]">
+                Backend, APIs &amp; Real-Time
+              </h3>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">FastAPI</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">Node.js &amp; Express</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">REST APIs</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">WebSockets</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">MQTT</span>
+              </div>
+            </div>
+
+            <div class="studio-card p-5">
+              <h3 class="font-poppins text-xs font-semibold uppercase tracking-wider text-[#FF3E74]">
+                Databases, Cloud &amp; AI/ML
+              </h3>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">MongoDB</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">SQLite &amp; Supabase</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">PyTorch &amp; Torchvision</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">MobileNetV2</span>
+                <span class="skill-pill rounded bg-white/[0.05] px-2.5 py-1 font-outfit text-sm text-[#FAFAFA]">NLP &amp; Git</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         CONTACT & QUICK DISPATCH SECTION
+         ===================================================================== -->
+    <section id="contact" class="mx-auto max-w-[1440px] px-5 pt-16 pb-24 sm:px-8 lg:px-[80px]">
+      <div class="studio-card reveal-ready p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5 space-y-4">
+          <span class="font-poppins text-xs font-medium uppercase tracking-wider text-[#FF3E74]">
+            Direct Contact
+          </span>
+          <h2 class="font-outfit text-3xl sm:text-4xl font-semibold text-[#FAFAFA]">
+            Let’s Build Something Reliable
+          </h2>
+          <p class="font-outfit text-sm sm:text-base leading-relaxed text-[#CEDEFB]">
+            Based in Secunderabad, Telangana, India. Open to early-career software engineering, full-stack, real-time systems, and applied ML roles or collaborations.
+          </p>
+
+          <div class="space-y-3 pt-2">
+            <div class="flex items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#0A0908]/80 px-4 py-3 transition hover:border-white/20">
+              <div>
+                <div class="font-poppins text-[11px] text-[#CEDEFB]/70">Email</div>
+                <div class="font-outfit text-sm font-medium text-[#FAFAFA]">prabodhgadre06@gmail.com</div>
+              </div>
+              <button
+                type="button"
+                data-copy="prabodhgadre06@gmail.com"
+                class="copy-trigger rounded bg-white/[0.06] px-3 py-1.5 font-poppins text-xs font-medium text-[#FAFAFA] hover:bg-[#CF0F1E] active:scale-95 cursor-pointer transition"
+              >
+                Copy
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#0A0908]/80 px-4 py-3 transition hover:border-white/20">
+              <div>
+                <div class="font-poppins text-[11px] text-[#CEDEFB]/70">Phone</div>
+                <div class="font-outfit text-sm font-medium text-[#FAFAFA]">+91-7058398681</div>
+              </div>
+              <button
+                type="button"
+                data-copy="+91-7058398681"
+                class="copy-trigger rounded bg-white/[0.06] px-3 py-1.5 font-poppins text-xs font-medium text-[#FAFAFA] hover:bg-[#CF0F1E] active:scale-95 cursor-pointer transition"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+    </section>
+  </main>
+
+  <footer class="border-t border-white/[0.07] bg-[#080706]">
+    <div class="mx-auto flex max-w-[1440px] flex-col sm:flex-row items-center justify-between gap-4 px-5 py-6 sm:px-8 lg:px-[80px] font-poppins text-xs text-[#CEDEFB]/70">
+      <span>Prabodh Umesh Gadre · Secunderabad, India</span>
+      <span>Built with Outfit &amp; Poppins · #0A0908 · #FF3E74 · #CF0F1E</span>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Banner -->
+  <div
+    id="toastBanner"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-5 right-5 z-50 rounded-lg border border-[#FF3E74]/50 bg-[#161311] px-4 py-2.5 font-poppins text-xs font-medium text-[#FAFAFA] shadow-2xl opacity-0 translate-y-2 pointer-events-none transition-all duration-200"
+  ></div>
+
+  <script>
+    (function () {
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouchDevice = window.matchMedia && window.matchMedia('(hover: none)').matches;
+
+      // =======================================================================
+      // 0A. SECTION TRANSITION WIPE ON ANCHOR NAVIGATION
+      // =======================================================================
+      const wipeCurtain = document.getElementById('sectionWipeCurtain');
+      let wipeTimeout = null;
+
+      function triggerSectionWipe(targetId) {
+        const targetEl = document.querySelector(targetId);
+        if (!targetEl) return;
+
+        if (prefersReducedMotion || !wipeCurtain) {
+          targetEl.scrollIntoView({ behavior: 'auto' });
+          return;
+        }
+
+        wipeCurtain.classList.remove('is-wiping');
+        void wipeCurtain.offsetWidth;
+        wipeCurtain.classList.add('is-wiping');
+
+        clearTimeout(wipeTimeout);
+        wipeTimeout = setTimeout(() => {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }, 160);
+
+        setTimeout(() => {
+          wipeCurtain.classList.remove('is-wiping');
+        }, 620);
+      }
+
+      document.querySelectorAll('a.wipe-link[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          e.preventDefault();
+          triggerSectionWipe(href);
+        });
+      });
+
+      // =======================================================================
+      // 0B. SCROLL PROGRESS BAR & INTERSECTION OBSERVER REVEALS
+      // =======================================================================
+      const progressBar = document.getElementById('scrollProgressBar');
+      function updateScrollProgress() {
+        if (!progressBar) return;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+        progressBar.style.width = pct.toFixed(2) + '%';
+      }
+
+      window.addEventListener('scroll', updateScrollProgress, { passive: true });
+      updateScrollProgress();
+
+      const revealElements = document.querySelectorAll('.reveal-ready');
+      if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+        revealElements.forEach((el) => el.classList.add('is-revealed'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -36px 0px' }
+        );
+
+        revealElements.forEach((el) => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+          revealElements.forEach((el) => {
+            if (el.classList.contains('is-revealed')) return;
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.96) {
+              el.classList.add('is-revealed');
+              observer.unobserve(el);
+            }
+          });
+        }, { passive: true });
+      }
+
+      function replaySwap(el) {
+        if (!el || prefersReducedMotion) return;
+        el.classList.remove('content-swap');
+        void el.offsetWidth;
+        el.classList.add('content-swap');
+      }
+
+      // =======================================================================
+      // 0C. 3D CARD TILT & SHINE ON .studio-card
+      // =======================================================================
+      if (!prefersReducedMotion && !isTouchDevice) {
+        document.querySelectorAll('.studio-card').forEach((card) => {
+          const maxTilt = 5.5;
+          card.addEventListener('pointermove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width;
+            const py = (e.clientY - rect.top) / rect.height;
+            const tiltY = ((px - 0.5) * maxTilt * 2).toFixed(2);
+            const tiltX = ((0.5 - py) * maxTilt * 2).toFixed(2);
+
+            card.classList.add('is-tilting');
+            card.style.setProperty('--tilt-x', `${tiltX}deg`);
+            card.style.setProperty('--tilt-y', `${tiltY}deg`);
+            card.style.setProperty('--shine-x', `${(px * 100).toFixed(1)}%`);
+            card.style.setProperty('--shine-y', `${(py * 100).toFixed(1)}%`);
+            card.style.setProperty('--shine-opacity', '1');
+          });
+
+          card.addEventListener('pointerleave', () => {
+            card.classList.remove('is-tilting');
+            card.style.setProperty('--tilt-x', '0deg');
+            card.style.setProperty('--tilt-y', '0deg');
+            card.style.setProperty('--shine-opacity', '0');
+          });
+        });
+      }
+
+      // =======================================================================
+      // 1. TOAST & CLIPBOARD UTILITIES
+      // =======================================================================
+      const toastEl = document.getElementById('toastBanner');
+      let toastTimer = null;
+
+      function showToast(msg) {
+        if (!toastEl) return;
+        toastEl.textContent = msg;
+        toastEl.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+        toastEl.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+          toastEl.classList.remove('opacity-100', 'translate-y-0');
+        }, 2500);
+      }
+
+      function copyTextSafe(text) {
+        try {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = text;
+          tempInput.setAttribute('readonly', '');
+          tempInput.style.position = 'fixed';
+          tempInput.style.opacity = '0';
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          showToast('Copied to clipboard: ' + text);
+        } catch (err) {
+          showToast('Value: ' + text);
+        }
+      }
+
+      document.querySelectorAll('.copy-trigger').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          copyTextSafe(btn.getAttribute('data-copy') || '');
+        });
+      });
+
+      const navEmailBtn = document.getElementById('navCopyEmailBtn');
+      if (navEmailBtn) {
+        navEmailBtn.addEventListener('click', () => {
+          copyTextSafe('prabodhgadre06@gmail.com');
+        });
+      }
+
+      // =======================================================================
+      // 2. HERO SPOTLIGHT SWITCHER & POINTER GLOW
+      // =======================================================================
+      const spotlightData = {
+        urbanspot: {
+          tag: 'ROUND 2 SELECTION · AI HACK × MRDU 2K26 (TEAM 3VN)',
+          title: 'UrbanSpot — Smart Parking & Discovery',
+          badge: '10-Min Atomic Hold',
+          desc: 'Full-stack parking reservation web app with live WebSocket occupancy streaming, idempotent bookings, offline PIN/QR passes with Dexie outbox queuing, MapLibre routing, and a 4-tool AI assistant.',
+          stack: ['React + Vite', 'FastAPI', 'WebSockets', 'MapLibre GL', 'SQLite & Supabase', 'Dexie Offline'],
+          m1Label: 'Reservation Hold',
+          m1Val: '10-Min + Idempotent',
+          m2Label: 'AI Assistant Tools',
+          m2Val: '4 Callable Tools',
+          m3Label: 'Low-Signal Mode',
+          m3Val: 'Dexie + PIN/QR'
+        },
+        metro: {
+          tag: 'EVENT-DRIVEN TRANSIT TELEMETRY',
+          title: 'Metro Traffic & Passenger Load Analytics',
+          badge: 'MQTT → MongoDB → UI',
+          desc: 'Ingests carriage load telemetry over MQTT (metro/train/+/telemetry), persists structured records in MongoDB via Express/Mongoose, serves GET /api/telemetry/recent, and renders coach heatmaps in React.',
+          stack: ['Node.js', 'Express', 'MongoDB', 'MQTT', 'React', 'Tailwind CSS'],
+          m1Label: 'MQTT Topic Pattern',
+          m1Val: 'metro/train/+/telemetry',
+          m2Label: 'REST Read Endpoint',
+          m2Val: '/api/telemetry/recent',
+          m3Label: 'Operator View',
+          m3Val: 'Coach Load Heatmap'
+        },
+        vision: {
+          tag: 'TRANSFER LEARNING · MOBILENETV2',
+          title: 'Cloud-Native Freshness Predictor',
+          badge: '96.44% Accuracy',
+          desc: 'Trained MobileNetV2 across 13,000+ produce images with data augmentation to curb overfitting, compressed the deployable model to 14 MB on Streamlit Cloud, and added a 70% Softmax confidence gate.',
+          stack: ['Python', 'PyTorch', 'Torchvision', 'MobileNetV2', 'Streamlit Cloud'],
+          m1Label: 'Validation Accuracy',
+          m1Val: '96.44% (13,000+ imgs)',
+          m2Label: 'Model Footprint',
+          m2Val: '14 MB Optimized',
+          m3Label: 'OOD Confidence Gate',
+          m3Val: '70% Softmax Filter'
+        }
+      };
+
+      const spotlightTabs = document.querySelectorAll('.spotlight-tab');
+      const spotlightContent = document.getElementById('spotlightContent');
+
+      spotlightTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const key = tab.getAttribute('data-spotlight-tab');
+          const item = spotlightData[key];
+          if (!item) return;
+
+          spotlightTabs.forEach((t) => {
+            t.className = 'spotlight-tab rounded px-2.5 py-1 font-poppins text-[11px] font-medium bg-white/[0.05] text-[#CEDEFB] hover:text-white cursor-pointer transition';
+          });
+          tab.className = 'spotlight-tab rounded px-2.5 py-1 font-poppins text-[11px] font-medium bg-[#CF0F1E] text-white cursor-pointer transition';
+
+          document.getElementById('spotlightTag').textContent = item.tag;
+          document.getElementById('spotlightTitle').textContent = item.title;
+          document.getElementById('spotlightBadge').textContent = item.badge;
+          document.getElementById('spotlightDesc').textContent = item.desc;
+          document.getElementById('metric1Label').textContent = item.m1Label;
+          document.getElementById('metric1Value').textContent = item.m1Val;
+          document.getElementById('metric2Label').textContent = item.m2Label;
+          document.getElementById('metric2Value').textContent = item.m2Val;
+          document.getElementById('metric3Label').textContent = item.m3Label;
+          document.getElementById('metric3Value').textContent = item.m3Val;
+
+          const stackContainer = document.getElementById('spotlightStack');
+          stackContainer.innerHTML = item.stack
+            .map((tech) => `<span class="rounded bg-white/[0.06] px-2.5 py-1 font-poppins text-[11px] text-[#FAFAFA]">${tech}</span>`)
+            .join('');
+
+          replaySwap(spotlightContent);
+        });
+      });
+
+      const spotlightStage = document.getElementById('heroSpotlightStage');
+      const pointerGlow = document.getElementById('heroPointerGlow');
+      if (spotlightStage && pointerGlow && !prefersReducedMotion) {
+        spotlightStage.addEventListener('mousemove', (e) => {
+          const rect = spotlightStage.getBoundingClientRect();
+          const dx = ((e.clientX - rect.left) / rect.width - 0.5) * 44;
+          const dy = ((e.clientY - rect.top) / rect.height - 0.5) * 44;
+          pointerGlow.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+        });
+        spotlightStage.addEventListener('mouseleave', () => {
+          pointerGlow.style.transform = 'translate(0px, 0px)';
+        });
+      }
+
+      // =======================================================================
+      // 3. PROJECT CATEGORY FILTER & ARCHITECTURE INSPECTOR
+      // =======================================================================
+      const filterBtns = document.querySelectorAll('.project-filter-btn');
+      const projectCards = document.querySelectorAll('#projectsGrid article');
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+          filterBtns.forEach((b) => {
+            b.className = 'project-filter-btn rounded border border-white/15 bg-white/[0.03] px-3.5 py-2 font-poppins text-xs font-medium text-[#CEDEFB] hover:border-[#FF3E74]/50 hover:text-white cursor-pointer transition';
+          });
+          btn.className = 'project-filter-btn rounded bg-[#CF0F1E] px-3.5 py-2 font-poppins text-xs font-medium text-white cursor-pointer transition';
+
+          projectCards.forEach((card, idx) => {
+            const cats = (card.getAttribute('data-category') || '').split(' ');
+            if (filter === 'all' || cats.includes(filter)) {
+              card.classList.remove('hidden');
+              card.classList.add('is-revealed');
+              if (!prefersReducedMotion) {
+                card.style.animation = 'none';
+                void card.offsetWidth;
+                card.style.animation = `heroFadeUp 0.42s var(--ease-spring) ${idx * 65}ms both`;
+              }
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+
+      const inspectorNotes = {
+        urbanspot: {
+          eyebrow: 'UrbanSpot · Architecture Deep-Dive',
+          title: 'Concurrency Holds, Offline Passes & Tool-Calling Assistant',
+          flow: 'Users search nearby lots with live availability & pricing filters, trigger a 10-minute atomic slot hold, receive real-time WebSocket occupancy broadcasts, and generate a PIN/QR pass.',
+          tradeoff: 'Pair idempotent reservation keys and Dexie outbox queuing so flaky mobile connections near underground or dense urban garages do not double-charge or lose pass state.',
+          proof: 'Advanced to Round 2 at AI HACK × MRDU 2K26 with Team 3VN; assistant exposes search_lots, get_eta, check_forecast, and reserve_slot actions.'
+        },
+        metro: {
+          eyebrow: 'Metro Traffic & Passenger Load · Pipeline Notes',
+          title: 'MQTT Carriage Ingestion to React Operator Dashboard',
+          flow: 'Train/carriage publishers emit load telemetry to metro/train/+/telemetry; Express consumes messages, stores structured snapshots in MongoDB, and exposes GET /api/telemetry/recent.',
+          tradeoff: 'Decoupled broker ingestion and MongoDB persistence from UI rendering while structuring modules so Socket.io push, PyTorch vision crowd models, and Docker compose slot in cleanly.',
+          proof: 'Baseline Express + MongoDB + MQTT ingestion and React + Tailwind metric/coach heatmap UI verified locally and pushed to GitHub.'
+        },
+        vision: {
+          eyebrow: 'Freshness Predictor · Model Engineering Notes',
+          title: 'MobileNetV2 Transfer Learning & Confidence Gating',
+          flow: 'Input images pass through preprocessing and MobileNetV2 classification on Streamlit Cloud, returning class probabilities alongside a 70% Softmax confidence gate.',
+          tradeoff: 'Balanced accuracy and footprint by using transfer learning + data augmentation across 13,000+ images, keeping the deployed model compact at 14 MB while rejecting low-confidence non-target photos.',
+          proof: 'Achieved 96.44% accuracy across 13,000+ images with a 14 MB model artifact and 70% Softmax threshold.'
+        }
+      };
+
+      const drawer = document.getElementById('architectureDrawer');
+      const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+
+      document.querySelectorAll('.inspect-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-inspect');
+          const note = inspectorNotes[id];
+          if (!note || !drawer) return;
+
+          document.getElementById('drawerEyebrow').textContent = note.eyebrow;
+          document.getElementById('drawerTitle').textContent = note.title;
+          document.getElementById('drawerFlow').textContent = note.flow;
+          document.getElementById('drawerTradeoff').textContent = note.tradeoff;
+          document.getElementById('drawerProof').textContent = note.proof;
+
+          drawer.classList.remove('hidden');
+          replaySwap(drawer);
+          drawer.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'nearest' });
+        });
+      });
+
+      if (closeDrawerBtn && drawer) {
+        closeDrawerBtn.addEventListener('click', () => {
+          drawer.classList.add('hidden');
+        });
+      }
+
+      // =======================================================================
+      // 4A. URBANSPOT 10-MINUTE SLOT HOLD SANDBOX
+      // =======================================================================
+      const slotDefinitions = [
+        { code: 'A-01', type: 'EV + Covered', occupied: false },
+        { code: 'A-02', type: 'Standard Bay', occupied: false },
+        { code: 'A-03', type: 'Compact Bay', occupied: true },
+        { code: 'B-01', type: 'Covered Bay', occupied: false },
+        { code: 'B-02', type: 'Standard Bay', occupied: true },
+        { code: 'B-03', type: 'EV Fast Bay', occupied: false }
+      ];
+
+      let selectedBayCode = 'A-02';
+      let heldBayCode = null;
+      let holdSecondsLeft = 600;
+      let holdTimer = null;
+      let isOfflineSim = false;
+      let dexieQueuedOps = 0;
+      let activeIdemKey = 'idem_ready_01';
+      let activePinPass = 'PENDING HOLD';
+
+      function formatMMSS(totalSec) {
+        const clamped = Math.max(0, totalSec);
+        const mins = Math.floor(clamped / 60);
+        const secs = clamped % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+
+      function renderUrbanSpotSandbox() {
+        const slotsGrid = document.getElementById('parkingSlotsGrid');
+        const summaryEl = document.getElementById('spotAvailabilitySummary');
+        const countdownEl = document.getElementById('holdCountdownDisplay');
+        const badgeEl = document.getElementById('holdStateBadge');
+        const metaEl = document.getElementById('holdHubMeta');
+        const lotSelect = document.getElementById('urbanspotLotSelect');
+        if (!slotsGrid || !countdownEl || !badgeEl || !lotSelect) return;
+
+        const openCount = slotDefinitions.filter((s) => !s.occupied && s.code !== heldBayCode).length;
+        if (summaryEl) summaryEl.textContent = `${openCount} / ${slotDefinitions.length} Bays Open`;
+        if (metaEl) metaEl.textContent = lotSelect.value;
+
+        slotsGrid.innerHTML = slotDefinitions
+          .map((slot) => {
+            const isHeld = slot.code === heldBayCode;
+            const isSelected = slot.code === selectedBayCode;
+            const disabled = slot.occupied && !isHeld;
+
+            let cls = 'border-white/12 bg-[#0A0908] text-[#FAFAFA] hover:border-white/30';
+            let statusLabel = 'OPEN';
+
+            if (isHeld) {
+              cls = 'border-[#FF3E74] bg-[#FF3E74]/15 text-[#FAFAFA]';
+              statusLabel = 'HELD (10m)';
+            } else if (disabled) {
+              cls = 'border-white/[0.05] bg-white/[0.02] text-[#CEDEFB]/35 cursor-not-allowed';
+              statusLabel = 'OCCUPIED';
+            } else if (isSelected) {
+              cls = 'border-white/50 bg-white/[0.07] text-[#FAFAFA]';
+              statusLabel = 'SELECTED';
+            }
+
+            return `
+              <button
+                type="button"
+                data-bay="${slot.code}"
+                ${disabled ? 'disabled' : ''}
+                class="bay-select-btn rounded-lg border p-2.5 text-left transition ${disabled ? '' : 'cursor-pointer hover:-translate-y-0.5'} ${cls}"
+              >
+                <div class="flex items-center justify-between font-poppins text-[10px]">
+                  <span class="font-semibold">${slot.code}</span>
+                  <span class="${isHeld ? 'text-[#FF3E74]' : 'text-[#CEDEFB]/70'}">${statusLabel}</span>
+                </div>
+                <div class="mt-1 font-outfit text-xs text-[#CEDEFB]/85 truncate">${slot.type}</div>
+              </button>
+            `;
+          })
+          .join('');
+
+        slotsGrid.querySelectorAll('.bay-select-btn:not([disabled])').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            selectedBayCode = btn.getAttribute('data-bay');
+            renderUrbanSpotSandbox();
+          });
+        });
+
+        countdownEl.textContent = formatMMSS(holdSecondsLeft);
+        if (heldBayCode) {
+          badgeEl.textContent = isOfflineSim ? 'HELD · DEXIE QUEUED' : 'ACTIVE HOLD';
+          badgeEl.className = 'rounded bg-[#FF3E74]/20 border border-[#FF3E74]/45 px-2 py-0.5 font-poppins text-[11px] font-semibold text-[#FF3E74]';
+        } else {
+          badgeEl.textContent = 'IDLE';
+          badgeEl.className = 'rounded bg-white/[0.06] px-2 py-0.5 font-poppins text-[11px] text-[#CEDEFB]';
+        }
+
+        document.getElementById('passSlotCode').textContent = heldBayCode || selectedBayCode;
+        document.getElementById('passIdemKey').textContent = activeIdemKey;
+        document.getElementById('passPinCode').textContent = activePinPass;
+        document.getElementById('dexieQueueStatus').textContent = `${dexieQueuedOps} queued op${dexieQueuedOps === 1 ? '' : 's'}`;
+      }
+
+      function stopHoldTimer() {
+        if (holdTimer) {
+          clearInterval(holdTimer);
+          holdTimer = null;
+        }
+      }
+
+      function startHoldTimer() {
+        stopHoldTimer();
+        holdTimer = setInterval(() => {
+          if (holdSecondsLeft > 0) {
+            holdSecondsLeft -= 1;
+            renderUrbanSpotSandbox();
+          } else {
+            stopHoldTimer();
+            heldBayCode = null;
+            holdSecondsLeft = 600;
+            activePinPass = 'EXPIRED';
+            renderUrbanSpotSandbox();
+            showToast('10-minute slot hold expired; bay released');
+          }
+        }, 1000);
+      }
+
+      const lockHoldBtn = document.getElementById('lockSlotHoldBtn');
+      if (lockHoldBtn) {
+        lockHoldBtn.addEventListener('click', () => {
+          const targetSlot = slotDefinitions.find((s) => s.code === selectedBayCode);
+          if (!targetSlot || targetSlot.occupied) {
+            showToast('Choose an open bay first');
+            return;
+          }
+          heldBayCode = targetSlot.code;
+          holdSecondsLeft = 600;
+          const randSuffix = Math.floor(1000 + Math.random() * 9000);
+          activeIdemKey = `idem_${targetSlot.code.replace('-', '')}_${randSuffix}`;
+          activePinPass = `PIN-${Math.floor(100000 + Math.random() * 900000)}`;
+          if (isOfflineSim) {
+            dexieQueuedOps += 1;
+          }
+          startHoldTimer();
+          renderUrbanSpotSandbox();
+          showToast(
+            isOfflineSim
+              ? `Queued hold for ${heldBayCode} in Dexie outbox (${activePinPass})`
+              : `Locked 10:00 hold on ${heldBayCode} · Pass ${activePinPass}`
+          );
+        });
+      }
+
+      const releaseHoldBtn = document.getElementById('releaseSlotHoldBtn');
+      if (releaseHoldBtn) {
+        releaseHoldBtn.addEventListener('click', () => {
+          stopHoldTimer();
+          heldBayCode = null;
+          holdSecondsLeft = 600;
+          activePinPass = 'RELEASED';
+          renderUrbanSpotSandbox();
+          showToast('Slot hold released');
+        });
+      }
+
+      const fastForwardBtn = document.getElementById('fastForwardHoldBtn');
+      if (fastForwardBtn) {
+        fastForwardBtn.addEventListener('click', () => {
+          if (!heldBayCode) {
+            showToast('Lock a hold first to advance the timer');
+            return;
+          }
+          holdSecondsLeft = Math.max(0, holdSecondsLeft - 60);
+          if (holdSecondsLeft === 0) {
+            stopHoldTimer();
+            heldBayCode = null;
+            holdSecondsLeft = 600;
+            activePinPass = 'EXPIRED';
+            showToast('10-minute hold reached 00:00 and released');
+          }
+          renderUrbanSpotSandbox();
+        });
+      }
+
+      const toggleOfflineBtn = document.getElementById('toggleOfflineQueueBtn');
+      if (toggleOfflineBtn) {
+        toggleOfflineBtn.addEventListener('click', () => {
+          isOfflineSim = !isOfflineSim;
+          if (!isOfflineSim && dexieQueuedOps > 0) {
+            showToast(`Reconnected: flushed ${dexieQueuedOps} Dexie outbox op(s)`);
+            dexieQueuedOps = 0;
+          } else {
+            showToast(isOfflineSim ? 'Simulated low-signal / offline mode (Dexie active)' : 'Network online');
+          }
+          toggleOfflineBtn.textContent = isOfflineSim
+            ? 'Network: Offline (Dexie Queue)'
+            : 'Network: Online (Dexie Ready)';
+          renderUrbanSpotSandbox();
+        });
+      }
+
+      const lotSelectEl = document.getElementById('urbanspotLotSelect');
+      if (lotSelectEl) {
+        lotSelectEl.addEventListener('change', renderUrbanSpotSandbox);
+      }
+
+      renderUrbanSpotSandbox();
+
+      // =======================================================================
+      // 4B. METRO CARRIAGE TELEMETRY SANDBOX
+      // =======================================================================
+      let loads = [42, 68, 84, 91, 57, 49];
+      let autoInterval = null;
+
+      function renderMetroSandbox() {
+        const grid = document.getElementById('coachHeatmap');
+        const logEl = document.getElementById('metroJsonLog');
+        const avgEl = document.getElementById('metroAvgLoad');
+        if (!grid || !logEl || !avgEl) return;
+
+        grid.innerHTML = loads
+          .map((pct, idx) => {
+            const isHigh = pct >= 80;
+            const isMid = pct >= 55 && pct < 80;
+            const barColor = isHigh ? 'bg-[#CF0F1E]' : isMid ? 'bg-[#FF3E74]' : 'bg-emerald-400';
+            const statusText = isHigh ? 'Peak' : isMid ? 'Moderate' : 'Light';
+            return `
+              <div class="rounded-lg border border-white/[0.08] bg-[#0A0908] p-2.5 transition-colors duration-300">
+                <div class="flex items-center justify-between font-poppins text-[11px] text-[#CEDEFB]/80">
+                  <span>C${idx + 1}</span>
+                  <span>${statusText}</span>
+                </div>
+                <div class="mt-1 font-outfit text-lg font-semibold text-[#FAFAFA] tabular-nums">${pct}%</div>
+                <div class="mt-1.5 h-1.5 w-full rounded-full bg-white/[0.08] overflow-hidden">
+                  <div class="h-full ${barColor} transition-all duration-500 ease-out" style="width:${pct}%"></div>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+
+        const avg = Math.round(loads.reduce((a, b) => a + b, 0) / loads.length);
+        avgEl.textContent = `Avg Load: ${avg}%`;
+
+        const payload = {
+          topic: 'metro/train/+/telemetry',
+          station: 'Secunderabad West',
+          coaches: loads.map((occupancyPct, i) => ({ coach: `C${i + 1}`, occupancyPct })),
+          avgOccupancyPct: avg,
+          timestamp: new Date().toISOString()
+        };
+        logEl.textContent = JSON.stringify(payload, null, 2);
+      }
+
+      function emitMetroTick() {
+        loads = loads.map((prev) => {
+          const delta = Math.floor(Math.random() * 25) - 12;
+          return Math.min(98, Math.max(22, prev + delta));
+        });
+        renderMetroSandbox();
+      }
+
+      const pulseMetroBtn = document.getElementById('pulseMetroBtn');
+      if (pulseMetroBtn) {
+        pulseMetroBtn.addEventListener('click', () => {
+          emitMetroTick();
+          showToast('Simulated MQTT frame published to metro/train/+/telemetry');
+        });
+      }
+
+      const toggleAutoMetroBtn = document.getElementById('toggleAutoMetroBtn');
+      if (toggleAutoMetroBtn) {
+        toggleAutoMetroBtn.addEventListener('click', () => {
+          if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+            toggleAutoMetroBtn.textContent = 'Auto Stream: Off';
+            showToast('Paused live telemetry simulator');
+          } else {
+            autoInterval = setInterval(emitMetroTick, 1800);
+            toggleAutoMetroBtn.textContent = 'Auto Stream: On';
+            showToast('Streaming live carriage telemetry every 1.8s');
+          }
+        });
+      }
+
+      renderMetroSandbox();
+
+      // =======================================================================
+      // 5. SOFTMAX 70% CONFIDENCE GATE SANDBOX
+      // =======================================================================
+      const sampleScenarios = {
+        'fresh-apple': {
+          conf: 97.2,
+          accepted: true,
+          badge: 'ACCEPTED · FRESH PRODUCE',
+          badgeClass: 'bg-emerald-500/15 border-emerald-400/35 text-emerald-300',
+          desc: 'Prediction "Fresh" (97.2%) clears the 70.0% Softmax threshold from the 14 MB MobileNetV2 model.'
+        },
+        'aged-banana': {
+          conf: 84.6,
+          accepted: true,
+          badge: 'ACCEPTED · MATURITY CLASSIFIED',
+          badgeClass: 'bg-emerald-500/15 border-emerald-400/35 text-emerald-300',
+          desc: 'Prediction "Overripe / Aging" (84.6%) passes the 70.0% Softmax guard after data-augmented training.'
+        },
+        'random-gadget': {
+          conf: 41.8,
+          accepted: false,
+          badge: 'REJECTED · BELOW 70% SOFTMAX CUTOFF',
+          badgeClass: 'bg-[#CF0F1E]/25 border-[#CF0F1E]/60 text-[#FAFAFA]',
+          desc: 'Top Softmax score is 41.8% (< 70.0% filter). Filtered out as non-target / low-confidence input.'
+        }
+      };
+
+      const sampleBtns = document.querySelectorAll('.sample-infer-btn');
+      const inferenceBox = document.getElementById('inferenceResultBox');
+
+      sampleBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-sample');
+          const data = sampleScenarios[key];
+          if (!data) return;
+
+          sampleBtns.forEach((b) => {
+            b.className = 'sample-infer-btn rounded-lg border border-white/12 bg-white/[0.03] p-3 text-left hover:border-white/30 hover:-translate-y-0.5 cursor-pointer transition';
+          });
+          btn.className = 'sample-infer-btn rounded-lg border border-[#FF3E74]/60 bg-[#FF3E74]/12 p-3 text-left cursor-pointer transition';
+
+          const badgeEl = document.getElementById('inferenceDecisionBadge');
+          badgeEl.textContent = data.badge;
+          badgeEl.className = `inline-flex items-center rounded border px-2.5 py-0.5 font-poppins text-xs font-semibold transition-colors duration-300 ${data.badgeClass}`;
+
+          document.getElementById('inferenceConfidenceText').textContent = `Confidence: ${data.conf.toFixed(1)}%`;
+          document.getElementById('inferenceBar').style.width = `${data.conf}%`;
+          document.getElementById('inferenceExplanation').textContent = data.desc;
+          replaySwap(inferenceBox);
+        });
+      });
+
+      // =======================================================================
+      // 6. CONTACT FORM NOTE BUILDER
+      // =======================================================================
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('senderName').value.trim();
+          const email = document.getElementById('senderEmail').value.trim();
+          const msg = document.getElementById('senderMessage').value.trim();
+
+          const summary = `To: prabodhgadre06@gmail.com | From: ${name} (${email}) | Note: ${msg}`;
+          copyTextSafe(summary);
+          const feedback = document.getElementById('formFeedback');
+          if (feedback) {
+            feedback.textContent = 'Formatted note copied to clipboard for prabodhgadre06@gmail.com.';
+            replaySwap(feedback);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
